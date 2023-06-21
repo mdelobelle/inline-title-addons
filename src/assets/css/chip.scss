@@ -1,0 +1,22 @@
+.inline-title-addons .chip {
+    border-radius: 0.8em;
+    padding: 0.1em 0.75em 0.25em 0.75em;
+    color: white;
+    margin-left: 0.5em;
+    margin-right: 0.5em;
+    height: 1.6em;
+    white-space: nowrap;
+
+    &.field-type{
+        font-size: x-small;
+    }
+
+    &.script{
+        background-color: var(--color-blue);
+    }
+
+    &.command{
+        background-color: var(--color-green);
+    }
+    
+}
