@@ -2,10 +2,12 @@ import { MarkdownView, Plugin, setIcon, TFile } from 'obsidian';
 import { AddOnCommand } from 'src/AddOnCommand';
 import { Settings, DEFAULT_SETTINGS } from 'src/Settings';
 import SettingTab from 'src/SettingTab';
+import { FolderNoteAlias } from 'src/FolderNoteAlias';
 
 export default class InlineTitleAddOnPlugin extends Plugin {
 	settings: Settings;
 	public initialCommands: Array<AddOnCommand> = [];
+	public initialFolderNoteAliases: Array<FolderNoteAlias> = [];
 
 	async onload() {
 		await this.loadSettings();
@@ -14,6 +16,10 @@ export default class InlineTitleAddOnPlugin extends Plugin {
 			const addOnCommand: AddOnCommand = { ...command };
 			this.initialCommands.push(addOnCommand);
 		});
+		this.settings.folderNoteAliases.forEach(fNA => {
+			const folderNoteAlias: FolderNoteAlias = { ...fNA };
+			this.initialFolderNoteAliases.push(folderNoteAlias);
+		})
 
 		this.addSettingTab(new SettingTab(this));
 		app.workspace.iterateRootLeaves(async (leaf) => {
@@ -63,15 +69,25 @@ export default class InlineTitleAddOnPlugin extends Plugin {
 
 	private async embedTitle(view: MarkdownView) {
 		const title = view.inlineTitleEl;
+		title.show()
 		const titleParent = title.parentElement!;
+		const folder = view.file.parent.path
 
 		if (!title.hasClass("with-add-ons")) {
 			title.addClass("with-add-ons")
 			const titleWithAddOnsContainer = titleParent.createDiv("inline-title-with-add-ons-container");
 			titleParent.prepend(titleWithAddOnsContainer);
 			titleWithAddOnsContainer.prepend(title);
+
+			this.settings.folderNoteAliases.forEach(f => {
+				if (f.folder === folder) {
+					const alias = titleWithAddOnsContainer.createDiv({ cls: "inline-title" })
+					alias.textContent = (Function("title", f.formatingFunction))(title.textContent)
+					title.hide();
+				}
+			})
 			const addOnsContainer = titleWithAddOnsContainer.createDiv({ cls: "add-ons" })
-			const folder = view.file.parent.path
+
 			const inlinetags = this.app.metadataCache.getFileCache(view.file)?.tags?.map(t => t.tag) || []
 			const metatags = this.app.metadataCache.getFileCache(view.file)?.frontmatter?.tags || []
 			let tags: string[] = []
@@ -108,6 +124,7 @@ export default class InlineTitleAddOnPlugin extends Plugin {
 
 	async saveSettings() {
 		this.settings.commands = this.initialCommands;
+		this.settings.folderNoteAliases = this.initialFolderNoteAliases;
 		await this.saveData(this.settings);
 	}
 }

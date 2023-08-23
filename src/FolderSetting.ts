@@ -1,18 +1,17 @@
 import { Setting } from "obsidian";
-import { AddOnCommand } from "./AddOnCommand";
-import CommandSettingsModal from "./CommandSettingModal";
+import { FolderNoteAlias } from "./FolderNoteAlias";
 import SettingTab from "./SettingTab";
+import FolderSettingModal from "./FolderSettingModal";
 
-export default class CommandSetting extends Setting {
-    private commandNameContainer: HTMLSpanElement;
-    private typeContainer: HTMLSpanElement;
-    private commandDescriptionContainer: HTMLSpanElement;
+export default class FolderSetting extends Setting {
+    private folderNameContainer: HTMLSpanElement;
+    private formatingContainer: HTMLSpanElement;
 
     constructor(
         private tab: SettingTab,
-        public command: AddOnCommand
+        public folderNoteAlias: FolderNoteAlias
     ) {
-        super(tab.commandsContainer);
+        super(tab.foldersContainer);
         this.setTextContentWithname();
         this.addPutBeforeButton();
         this.addPutAfterButton();
@@ -25,40 +24,36 @@ export default class CommandSetting extends Setting {
 
         this.infoEl.textContent = "";
         this.infoEl.addClass("setting-item")
-        this.commandNameContainer = this.infoEl.createEl("div", "name")
-        this.commandNameContainer.setText(this.command.command)
-        this.typeContainer = this.infoEl.createEl("div")
-        this.typeContainer.setAttr("class", `chip ${this.command.type}`)
-        this.typeContainer.setText(this.command.type)
-        this.commandDescriptionContainer = this.infoEl.createEl("div")
-        this.commandDescriptionContainer.setText(`${this.command.description}`)
+        this.folderNameContainer = this.infoEl.createEl("div", "name")
+        this.folderNameContainer.setText(this.folderNoteAlias.folder)
+        this.formatingContainer = this.infoEl.createSpan(this.folderNoteAlias.formatingFunction)
     };
 
     private addPutBeforeButton(): void {
-        if (this.command.id !== this.tab.plugin.settings.commands.first()?.id) {
+        if (this.folderNoteAlias.id !== this.tab.plugin.settings.folderNoteAliases.first()?.id) {
             this.addButton((b) => {
                 b.setIcon("chevron-up")
                     .onClick(() => {
-                        const cmds = this.tab.plugin.settings.commands
-                        const pos = cmds.map(c => c.id).indexOf(this.command.id);
+                        const cmds = this.tab.plugin.settings.folderNoteAliases
+                        const pos = cmds.map(c => c.id).indexOf(this.folderNoteAlias.id);
                         [cmds[pos - 1], cmds[pos]] = [cmds[pos], cmds[pos - 1]]
                         this.tab.plugin.saveSettings();
-                        this.tab.buildCommands();
+                        this.tab.buildFolders();
                     })
             })
         }
     }
 
     private addPutAfterButton(): void {
-        if (this.command.id !== this.tab.plugin.settings.commands.last()?.id) {
+        if (this.folderNoteAlias.id !== this.tab.plugin.settings.folderNoteAliases.last()?.id) {
             this.addButton((b) => {
                 b.setIcon("chevron-down")
                     .onClick(() => {
-                        const cmds = this.tab.plugin.settings.commands
-                        const pos = cmds.map(c => c.id).indexOf(this.command.id);
+                        const cmds = this.tab.plugin.settings.folderNoteAliases
+                        const pos = cmds.map(c => c.id).indexOf(this.folderNoteAlias.id);
                         [cmds[pos], cmds[pos + 1]] = [cmds[pos + 1], cmds[pos]]
                         this.tab.plugin.saveSettings();
-                        this.tab.buildCommands();
+                        this.tab.buildFolders();
 
                     })
             })
@@ -70,7 +65,7 @@ export default class CommandSetting extends Setting {
             b.setIcon("pencil")
                 .setTooltip("Edit")
                 .onClick(() => {
-                    let modal = new CommandSettingsModal(this.tab, this, this.command);
+                    let modal = new FolderSettingModal(this.tab, this, this.folderNoteAlias);
                     modal.open();
                 });
         });
@@ -81,9 +76,9 @@ export default class CommandSetting extends Setting {
             b.setIcon("trash")
                 .setTooltip("Delete")
                 .onClick(() => {
-                    const currentExistingProperty = this.tab.plugin.initialCommands.filter(p => p.id == this.command.id)[0];
+                    const currentExistingProperty = this.tab.plugin.initialFolderNoteAliases.filter(p => p.id == this.folderNoteAlias.id)[0];
                     if (currentExistingProperty) {
-                        this.tab.plugin.initialCommands.remove(currentExistingProperty);
+                        this.tab.plugin.initialFolderNoteAliases.remove(currentExistingProperty);
                     };
                     this.settingEl.parentElement?.removeChild(this.settingEl);
                     this.tab.plugin.saveSettings();

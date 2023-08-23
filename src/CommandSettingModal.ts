@@ -1,5 +1,4 @@
-import Plugin from "main";
-import { ButtonComponent, DropdownComponent, Modal, Notice, TextComponent, TextAreaComponent, ToggleComponent, setIcon } from "obsidian";
+import { ButtonComponent, DropdownComponent, Modal, Notice, TextComponent, TextAreaComponent, setIcon } from "obsidian";
 import { AddOnCommand } from "./AddOnCommand";
 import CommandSetting from "./CommandSetting";
 import SettingTab from "./SettingTab";

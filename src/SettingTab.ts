@@ -4,10 +4,14 @@ import { FolderSuggest } from "./utils/FolderSuggest";
 import CommandSettingsModal from "./CommandSettingModal";
 import { AddOnCommand } from "./AddOnCommand";
 import CommandSetting from "./CommandSetting";
+import { FolderNoteAlias } from "./FolderNoteAlias";
+import FolderSetting from "./FolderSetting";
+import FolderSettingModal from "./FolderSettingModal"
 
 export default class SettingTab extends PluginSettingTab {
     public plugin: Plugin;
     public commandsContainer: HTMLDivElement;
+    public foldersContainer: HTMLDivElement;
 
     constructor(plugin: Plugin) {
         super(app, plugin);
@@ -54,6 +58,15 @@ export default class SettingTab extends PluginSettingTab {
         this.plugin.initialCommands.forEach(command => {
             const addOnCommand: AddOnCommand = { ...command }
             new CommandSetting(this, addOnCommand);
+        });
+    }
+
+    public buildFolders() {
+        this.foldersContainer.replaceChildren();
+        /* Managed properties that currently have preset options */
+        this.plugin.initialFolderNoteAliases.forEach(fNA => {
+            const folderNoteAlias: FolderNoteAlias = { ...fNA }
+            new FolderSetting(this, folderNoteAlias);
         });
     }
 
@@ -117,6 +130,33 @@ export default class SettingTab extends PluginSettingTab {
 
         this.commandsContainer = commandsSettings.createDiv();
         this.buildCommands();
+
+        /*
+        -----------------------------------------
+        Folder Settings 
+        -----------------------------------------
+        */
+        const foldersSettings = this.createSettingGroup(
+            'Folders Note Aliases',
+            "All folders",
+            true
+        )
+        new Setting(foldersSettings)
+            .setName("Add New Folder Note Alias Setting")
+            .setDesc("Add a new alias rule to replace inline note names in a given folder .")
+            .addButton((button: ButtonComponent): ButtonComponent => {
+                return button
+                    .setTooltip("Add New Folder Note Alias")
+                    .setButtonText("Add new")
+                    .setCta()
+                    .onClick(async () => {
+                        let modal = new FolderSettingModal(this);
+                        modal.open();
+                    });
+            }).settingEl.addClass("no-border");
+
+        this.foldersContainer = foldersSettings.createDiv();
+        this.buildFolders();
 
     }
 }

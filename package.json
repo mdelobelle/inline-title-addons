@@ -21,7 +21,6 @@
 		"@typescript-eslint/parser": "5.29.0",
 		"builtin-modules": "3.3.0",
 		"esbuild": "0.17.3",
-		"node-sass": "^8.0.0",
 		"obsidian": "latest",
 		"onchange": "^7.1.0",
 		"tslib": "2.4.0",
@@ -29,6 +28,7 @@
 	},
 	"dependencies": {
 		"@popperjs/core": "^2.11.6",
-		"require-from-string": "^2.0.2"
+		"require-from-string": "^2.0.2",
+		"sass": "^1.66.1"
 	}
 }
