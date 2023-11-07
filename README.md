@@ -10,7 +10,7 @@ First you'll have to define a folder that store those files
 Then add a new command:
 - set the name of the command. In case of use of a javascipt script for this command, the name of the command is the name of the file minus the ".js" extension
 - set a description (will appear as a tooltip when hovering the button on desktop)
-- set an icon name fot the button (from lucide.dev library)
+- set an icon name for the button (from lucide.dev library)
 - set the field type:
   - command : for à obsidian command
   - script: for a javascript file
@@ -23,18 +23,20 @@ Then add a new command:
 scripts folder: Settings/javascript/commands/
 
 #### Add a new command
-Command name: shiftDate
-Description: day -1
-Icon name: calendar-minus
-Field type: script
-Folders: Daily/Notes
-Tags: 
-Args: {
+- Command name: shiftDate
+- Description: day -1
+- Icon name: calendar-minus
+- Field type: script
+- Folders: Daily/Notes
+- Tags: 
+- Args: ```json
+{
   "dateFormat": "YYYY-MM-DD ddd",
   "folder": "Daily/Notes",
   "duration": -1,
   "unit": "days"
 }
+```
 
 In this example
 the plugin will search for `shiftDate.js` in the folder `Settings/javascript/commands/`
