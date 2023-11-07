@@ -29,7 +29,8 @@ scripts folder: Settings/javascript/commands/
 - Field type: script
 - Folders: Daily/Notes
 - Tags: 
-- Args: ```json
+- Args: 
+```json
 {
   "dateFormat": "YYYY-MM-DD ddd",
   "folder": "Daily/Notes",
