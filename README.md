@@ -62,13 +62,13 @@ Replace the inline display title of notes in a given folder to improve readabili
 
 ### settings
 
-Folder: the folder where the note inline title display will be modified
-Formating function: a javascript function taking title as a single argument and returning a string
+- Folder: the folder where the note inline title display will be modified
+- Formating function: a javascript function taking title as a single argument and returning a string
 
 
 ### Example
-Folder: Daily/Notes
-Formating function: `return moment(title, "YYYY-MM-DD ddd").format("ddd DD MMM");`
+- Folder: Daily/Notes
+- Formating function: `return moment(title, "YYYY-MM-DD ddd").format("ddd DD MMM");`
 
 In this case the inline title of a note called "2023-11-07 Tue.md" will be displayed "Tue 07 Nov", shorter easier to read but not breaking the unicity and the sortability of the file
 
